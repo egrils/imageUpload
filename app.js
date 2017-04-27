@@ -41,7 +41,21 @@ app.post('/submitImage', function (req, res) {
         });
     }
 
-    fs.writeFile(path + imgName + '.' + imgExt, buffer);
+    fs.open(path + imgName + '.' + imgExt, 'w', function (err, fd) {
+        if(err) {
+            console.error(err);
+            return;
+        } else {
+            fs.writeFile(path + imgName + '.' + imgExt, buffer);
+            fs.close(fd, function(err){
+                if (err){
+                    console.log(err);
+                }
+                console.log("文件关闭成功！");
+            });
+        }
+    });
+
 
 });
 app.listen("3000");
