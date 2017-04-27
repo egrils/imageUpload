@@ -1,20 +1,49 @@
+var express = require('express');
+var bodyParser = require('body-parser');
+var app = new express();
 var fs = require('fs');
-var string = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==";
-var regex = /^data:.+\/(.+);base64,(.*)$/;
 
-var matches = string.match(regex);
-var ext = matches[1];
-var data = matches[2];
-var buffer = new Buffer(data, 'base64');
-var imgName = 'feishuoren';
-var path = './image/';
+fs.stat('./image', function (err, stat) {
+    if ((stat && stat.isDirectory()) ) {
+        console.log("已存在");
+    }
+    else {
+        console.log('创建image文件夹');
+        fs.mkdir('./image/', function (err) {
+            if (err) console.log('创建失败！');
+            else console.log('创建成功！');
+        });
+    }
+});
 
-if (fs.existsSync(path)) {
-    fs.writeFileSync(path + imgName +'.' + ext, buffer);
-}else {
-    fs.mkdir(path, function (err) {
-        if (err) throw err;
-    });
-    fs.writeFileSync(path + imgName +'.'+ ext, buffer);
-}
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
+
+app.get('/',function (req, res) {
+   res.sendFile("index.html",{root:__dirname});
+});
+
+app.post('/submitImage', function (req, res) {
+
+    var imgName = req.body.imgName;
+    var imgExt = req.body.imgExt;
+    var imgData = req.body.imgData;
+    var path = './image/';
+    var buffer = new Buffer(imgData, 'base64');
+
+    if (fs.exists(path)) {
+
+        fs.unlink(path + imgName + '.' + imgExt, function(err) {
+            if (err) {
+                return console.error(err);
+            }
+            console.log("文件删除成功！");
+        });
+    }
+
+    fs.writeFile(path + imgName + '.' + imgExt, buffer);
+
+});
+app.listen("3000");
+
 

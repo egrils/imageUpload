@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>picture preview</title>
+</head>
+<body>
+<input type="file" id="imgFile" name="file" onchange="getImg()"/>
+<div id="preview"></div>
+<button type="submit" id="submit" onclick="submitImg()">提交</button>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script type="text/javascript">
+    var imgdataUrl=null;
+    function getImg() {
+        var preview = document.getElementById('preview');
+        var files = document.getElementById("imgFile").files;
+
+        function readAndPreview(file) {
+
+            // Make sure `file.name` matches our extensions criteria
+            if (/\.(jpe?g|png|gif)$/i.test(file.name)) {
+                var reader = new FileReader();
+
+                reader.addEventListener("load", function () {
+                    var image = new Image();
+                    image.height = 100;
+                    image.title = file.name;
+                    image.src = this.result;
+                    imgdataUrl = this.result;
+                    preview.appendChild(image);
+                }, false);
+
+                reader.readAsDataURL(file);
+            }
+
+        }
+
+        if (files) {
+            [].forEach.call(files, readAndPreview);
+        }
+    }
+    function submitImg() {
+        if(document.getElementById("imgFile").files){
+            var regex = /^data:.+\/(.+);base64,(.*)$/;
+
+            var matches = imgdataUrl.match(regex);
+            var imgExt = matches[1];
+            var imgData = matches[2];
+            $.post('/submitImage', {
+                imgExt:imgExt,
+                imgData,imgData,
+                imgName: "feishuoren",
+                success:function () {
+                    alert("提交成功");
+                }
+            });
+        }
+    }
+</script>
+
+</body>
+
+</html>
