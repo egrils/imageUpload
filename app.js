@@ -6,6 +6,8 @@ var matches = string.match(regex);
 var ext = matches[1];
 var data = matches[2];
 var buffer = new Buffer(data, 'base64');
+var imgName = 'feishuoren';
+var path = './image/';
 
 if (fs.existsSync('./image/')) {
     fs.writeFileSync('image/data.' + ext, buffer);
@@ -13,6 +15,6 @@ if (fs.existsSync('./image/')) {
     fs.mkdir('./image', function (err) {
         if (err) throw err;
     });
-    fs.writeFileSync('./image/data.' + ext, buffer);
+    fs.writeFileSync(path + imgName +'.'+ ext, buffer);
 }
 
