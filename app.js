@@ -9,10 +9,10 @@ var buffer = new Buffer(data, 'base64');
 var imgName = 'feishuoren';
 var path = './image/';
 
-if (fs.existsSync('./image/')) {
-    fs.writeFileSync('image/data.' + ext, buffer);
+if (fs.existsSync(path)) {
+    fs.writeFileSync(path + imgName +'.' + ext, buffer);
 }else {
-    fs.mkdir('./image', function (err) {
+    fs.mkdir(path, function (err) {
         if (err) throw err;
     });
     fs.writeFileSync(path + imgName +'.'+ ext, buffer);
