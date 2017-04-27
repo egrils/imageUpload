@@ -4,7 +4,7 @@ var app = new express();
 var fs = require('fs');
 
 fs.stat('./image', function (err, stat) {
-    if ((stat && stat.isDirectory()) ) {
+    if ((stat && stat.isDirectory())) {
         console.log("已存在");
     }
     else {
@@ -19,8 +19,8 @@ fs.stat('./image', function (err, stat) {
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
-app.get('/',function (req, res) {
-   res.sendFile("index.html",{root:__dirname});
+app.get('/', function (req, res) {
+    res.sendFile("index.html", {root: __dirname});
 });
 
 app.post('/submitImage', function (req, res) {
@@ -33,7 +33,7 @@ app.post('/submitImage', function (req, res) {
 
     if (fs.exists(path)) {
 
-        fs.unlink(path + imgName + '.' + imgExt, function(err) {
+        fs.unlink(path + imgName + '.' + imgExt, function (err) {
             if (err) {
                 return console.error(err);
             }
@@ -42,13 +42,13 @@ app.post('/submitImage', function (req, res) {
     }
 
     fs.open(path + imgName + '.' + imgExt, 'w', function (err, fd) {
-        if(err) {
+        if (err) {
             console.error(err);
             return;
         } else {
             fs.writeFile(path + imgName + '.' + imgExt, buffer);
-            fs.close(fd, function(err){
-                if (err){
+            fs.close(fd, function (err) {
+                if (err) {
                     console.log(err);
                 }
                 console.log("文件关闭成功！");
@@ -56,8 +56,8 @@ app.post('/submitImage', function (req, res) {
         }
     });
 
-
 });
+
 app.listen("3000");
 
 
