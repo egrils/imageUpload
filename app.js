@@ -16,6 +16,7 @@ fs.stat('./image', function (err, stat) {
     }
 });
 
+app.use(express.static(__dirname));
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
@@ -40,7 +41,7 @@ app.post('/submitImage', function (req, res) {
             console.log("文件删除成功！");
         });
     }
-
+    console.time('writeFile');
     fs.open(path + imgName + '.' + imgExt, 'w', function (err, fd) {
         if (err) {
             console.error(err);
@@ -55,6 +56,7 @@ app.post('/submitImage', function (req, res) {
             });
         }
     });
+    console.timeEnd('writeFile');
 
 });
 
